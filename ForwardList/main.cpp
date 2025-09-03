@@ -1,9 +1,13 @@
 #include<iostream>
 #include<windows.h>
 using namespace std;
+using std::cout;
+using std::cin;
+using std::endl;
 
 #define tab "\t"
 #define string cout<<"---------------------------\n"<<endl
+//#define BASE_CHECK
 
 class Element
 {
@@ -67,17 +71,24 @@ public:
 	{
 		if (index > size_list)
 		{
-			cout << "Индекс выходит за пределы списка" << endl;
+			push_back(Data);
+			cout << "Индекс выходит за пределы списка - поставили в конец" << endl;
+			return;
 		}
 		if (index == 0)
 		{
 			push_front(Data);
+			return;
 		}
+
 		Element* Previous = Head;
 		for (int i = 0; i < index - 1; i++)
 		{
 			Previous = Previous->pNext;
 		}
+		Element* New = new Element(Data);
+		New->pNext = Previous->pNext;
+		Previous->pNext = New;
 		size_list++;
 	}
 	void pop_front()
@@ -143,7 +154,7 @@ public:
 void main()
 {
 	setlocale(LC_ALL, "");
-		
+#ifdef BASE_CHECK	
 	int n;
 	cout << "Go to size list: "; cin >> n;
 	ForwardList list;
@@ -155,7 +166,7 @@ void main()
 
 	string;
 	cout << "push_back - 30" << endl;
-	list.push_back(30);
+	list.push_back(123);
 	list.print();
 
 	string;
@@ -177,4 +188,28 @@ void main()
 	cout << "erase - 1" << endl;
 	list.erase(1);
 	list.print();
+#endif
+
+	ForwardList list1;
+	list1.push_back(0);
+	list1.push_back(1);
+	list1.push_back(1);
+	list1.push_back(2);
+	list1.print(); 
+	
+	ForwardList list2;
+	list2.push_back(3);
+	list2.push_back(5);
+	list2.push_back(8);
+	list2.push_back(13);
+	list2.push_back(21);
+	list2.push_back(34);
+	list2.push_back(55);
+	list2.push_back(89);
+	list2.print();
+
+	int index, value;
+	cout << "Go to value & index: "; cin >> value >> index;
+	list1.insert(value, index);
+	list1.print();
 }
