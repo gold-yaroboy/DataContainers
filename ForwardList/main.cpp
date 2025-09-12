@@ -46,6 +46,12 @@ public:
 		Temp = Temp->pNext;
 		return *this;
 	}
+	Iterator operator++(int)
+	{
+		Iterator old = *this;
+		Temp = Temp->pNext;
+		return old;
+	}
 	bool operator==(const Iterator& other)const
 	{
 		return this->Temp == other.Temp;
@@ -87,6 +93,11 @@ public:
 		size = 0;
 		cout << "FLConstructor:\t" << this << endl;
 	}
+	/*ForwardList(int size) :ForwardList()
+	{
+		while (size--)push_front(0);
+		cout << "FLSizeConstructor:\t" << this << endl;
+	}*/
 	explicit ForwardList(int size) :ForwardList()
 	{
 		while (size--)push_front(0);
@@ -106,11 +117,6 @@ public:
 		*this = other;
 		cout << "FLCopyConstructor:\t" << this << endl;
 	}
-	/*ForwardList(int size) :ForwardList()
-	{
-		while (size--)push_front(0);
-		cout << "FLSizeConstructor:\t" << this << endl;
-	}*/
 
 	ForwardList(ForwardList&& other) :ForwardList()
 	{
@@ -522,5 +528,10 @@ void main()
 	ForwardList list = { 3,5,8,13,21 };
 	list.print();
 	for (int i : list)cout << i << tab; cout << endl;
-
+	cout << string << endl;
+	for (Iterator it = list.begin(); it != list.end(); ++it)
+	{
+		cout << *it << tab;
+	}
+	cout << endl;
 }
