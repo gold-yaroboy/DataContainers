@@ -18,6 +18,7 @@ class Tree
 		}
 		~Element()
 		{
+			
 			cout << "EDestructor:\t" << this << endl;
 		}
 		friend class Tree;
@@ -44,46 +45,67 @@ public:
 	{
 		if (this->Root == nullptr)this->Root = new Element(Data);
 		if (Root == nullptr)return;
-		if(Data<Root->Data)
+		if (Data < Root->Data)
 		{
 			if (Root->pLeft == nullptr)Root->pLeft = new Element(Data);
 			else insert(Data, Root->pLeft);
 		}
 		else
 		{
-			if(Root->pRight==nullptr)Root->pRight = new Element(Data);
+			if (Root->pRight == nullptr)Root->pRight = new Element(Data);
 			else insert(Data, Root->pRight);
 		}
 	}
 
 	int minValue(Element* Root)
 	{
-		return Root==nullptr?0:Root->pLeft == nullptr ? Root->Data : minValue(Root->pLeft);
+		return Root == nullptr ? 0 : Root->pLeft == nullptr ? Root->Data : minValue(Root->pLeft);
 		/*if (Root->pLeft == nullptr)return Root->Data;
 		else return maxValue(Root->pLeft);*/
 	}
 
 	int maxValue(Element* Root)
 	{
-		return !Root?0:Root->pRight ? maxValue(Root->pRight) : Root->Data;
+		return !Root ? 0 : Root->pRight ? maxValue(Root->pRight) : Root->Data;
 		/*if (Root->pRight == nullptr)return Root->Data;
 		else return maxValue(Root->pRight);*/
 	}
 
-	int count(Element* Root)
+	int count(Element* Root) const
 	{
 		return !Root ? 0 : count(Root->pLeft) + count(Root->pRight) + 1;
 		/*if (Root == nullptr)return 0;
 		else return count(Root->pLeft) + count(Root->pRight) + 1;*/
 	}
 
+	int sum(Element* Root)const
+	{
+		return !Root ? 0 : sum(Root->pLeft) + sum(Root->pRight) + Root->Data;
+	}
+
+	double avg(Element* Root)const
+	{
+		int node_count = count(this->Root);
+		if (node_count == 0) return 0.0;
+		return (double)sum(this->Root) / node_count;
+	}
+
 	void print(Element* Root)const
 	{
 		if (Root == nullptr)return;
-		print(Root->pLeft);	
+		print(Root->pLeft);
 		cout << Root->Data << tab;
 		print(Root->pRight);
 	}
+
+	//void clear(Element*& Root) const
+	//{
+	//	if (Root == nullptr) return;
+	//	clear(Root->pLeft);
+	//	clear(Root->pRight);
+	//	delete Root;
+	//	Root = nullptr;
+	//}
 };
 
 void main()
@@ -95,7 +117,7 @@ void main()
 	cout << "min: " << tree.minValue(tree.GetRoot()) << endl;
 	cout << "max: " << tree.maxValue(tree.GetRoot()) << endl;
 	cout << "size: " << tree.count(tree.GetRoot()) << endl;
-	for (int i=0; i < n; i++)
+	for (int i = 0; i < n; i++)
 	{
 		tree.insert(rand() % 100, tree.GetRoot());
 	}
@@ -104,4 +126,6 @@ void main()
 	cout << "min: " << tree.minValue(tree.GetRoot()) << endl;
 	cout << "max: " << tree.maxValue(tree.GetRoot()) << endl;
 	cout << "size: " << tree.count(tree.GetRoot()) << endl;
+	cout << "sum: " << tree.sum(tree.GetRoot()) << endl;
+	cout << "avg: " << tree.avg(tree.GetRoot()) << endl;
 }
