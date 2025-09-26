@@ -142,11 +142,16 @@ private:
 	}
 	int depth(Element* Root)const
 	{
-		return
+		return Root == nullptr ? 0 : std::max(depth(Root->pLeft) + 1, depth(Root->pRight) + 1);
+		/*if (Root == nullptr)return 0;
+		int l_depth = depth(Root->pLeft) + 1;
+		int r_depth = depth(Root->pRight) + 1;
+		return l_depth < r_depth ? r_depth : l_depth;*/
+		/*return
 			!Root ? 0 :
 			depth(Root->pLeft) + 1 > depth(Root->pRight) + 1 ?
 			depth(Root->pLeft) + 1 :
-			depth(Root->pRight) + 1;
+			depth(Root->pRight) + 1;*/
 	}
 	void print(Element* Root)const
 	{
@@ -282,5 +287,6 @@ void main()
 	measure_performanse("sum in tree: ", &Tree::sum, tree);
 	measure_performanse("count in tree: ", &Tree::count, tree);
 	measure_performanse("avg in tree: ", &Tree::avg, tree);
+	measure_performanse("depth in tree: ", &Tree::depth, tree);
 	
 }
