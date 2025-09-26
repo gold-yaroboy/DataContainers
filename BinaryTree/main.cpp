@@ -1,8 +1,11 @@
 #include<iostream>
-using namespace std;
+#include<time.h>
+using std:: cout;
+using std:: cin;
+using std:: endl;
 
 #define tab "\t"
-#define DEBUG
+//#define DEBUG
 #define delimeter "\n--------------------------------------------------\n\n"
 
 class Tree
@@ -38,13 +41,11 @@ public:
 		cout << "TConstructor:\t" << this << endl;
 #endif // DEBUG
 	}
-	
 	Tree(const std::initializer_list<int>& il) :Tree()
 	{
 		for (int const* it = il.begin(); it != il.end(); ++it)insert(*it, Root);
 		cout << "ILConstructor:\t" << this << endl;
 	}
-
 	~Tree()
 	{
 		clear();
@@ -62,10 +63,16 @@ public:
 	int maxValue()const { return maxValue(Root); }
 	int sum()const { return sum(Root); }
 	int count()const { return count(Root); }
+	int depth()const { return depth(Root); }
 	void print()const
 	{
 		print(Root);
 		cout << endl;
+	}
+	double avg()const
+	{
+		if (count(this->Root) == 0) return 0.0;
+		return (double)sum(this->Root) / count(this->Root);
 	}
 
 private:
@@ -133,10 +140,13 @@ private:
 	{
 		return !Root ? 0 : sum(Root->pLeft) + sum(Root->pRight) + Root->Data;
 	}
-	double avg(Element* Root)const
+	int depth(Element* Root)const
 	{
-		if (count(this->Root) == 0) return 0.0;
-		return (double)sum(this->Root) / count(this->Root);
+		return
+			!Root ? 0 :
+			depth(Root->pLeft) + 1 > depth(Root->pRight) + 1 ?
+			depth(Root->pLeft) + 1 :
+			depth(Root->pRight) + 1;
 	}
 	void print(Element* Root)const
 	{
@@ -176,7 +186,16 @@ public:
 	void insert(int Data){insert(Data, Root);}
 };
 
+template<typename T>void measure_performanse(const char message[], T(Tree::*function)()const, const Tree& tree)
+{
+	clock_t start = clock();
+	T result = (tree.*function)();
+	clock_t end = clock();
+	cout << message << result << ", finish in a " << double(end - start) / CLOCKS_PER_SEC << " seconds\n";
+}
+
 //#define BASE_CHECK
+//#define ERASE_CHECK
 
 void main()
 {
@@ -219,21 +238,49 @@ void main()
 	cout << "avg: " << u_tree.avg() << endl;
 #endif // BASE_CHECK
 
-	Tree tree = 
-	{ 
+#ifdef ERASE_CHECK
+	Tree tree =
+	{
 						50,
 
 				25,				75,
 
-			16,		32,	   	58,		85 
+			16,		32,	   	58,		85 , 91,98
 	};
 	tree.print();
 
 	int value;
-	while (true) 
+	//cout << "Go to delete element: "; cin >> value;
+	//tree.erase(value);
+	tree.print();
+	cout << "depth: " << tree.depth() << endl;
+#endif // ERASE_CHECK
+
+	int n;
+	cout << "Enter to size tree: "; cin >> n;
+	Tree tree;
+	//cout << "min: " << tree.minValue() << endl;
+	//cout << "max: " << tree.maxValue() << endl;
+	//cout << "count: " << tree.count() << endl;
+
+	cout << delimeter;
+
+	for (int i = 0; i < n; i++)
 	{
-		cout << "Go to delete element: "; cin >> value;
-		tree.erase(value);
-		tree.print();
+		tree.insert(rand() % 100);
 	}
+	/*tree.print();
+	cout << "min: " << tree.minValue() << endl;
+	cout << "max: " << tree.maxValue() << endl;
+	cout << "count: " << tree.count() << endl;
+	cout << "sum: " << tree.sum() << endl;
+	cout << "avg: " << tree.avg() << endl;
+	cout << "depth: " << tree.depth() << endl;*/
+
+	measure_performanse("min value in tree: ", &Tree::minValue, tree);
+	measure_performanse("max value in tree: ", &Tree::maxValue, tree);
+	measure_performanse("sum in tree: ", &Tree::sum, tree);
+	measure_performanse("count in tree: ", &Tree::count, tree);
+	measure_performanse("avg in tree: ", &Tree::avg, tree);
+	
 }
